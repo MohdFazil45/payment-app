@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { useDetails } from "@/store/userDetail";
 import { LoginSchema } from "@repo/zodschema";
 import { useForm } from "@tanstack/react-form";
 import axios from "axios";
@@ -9,6 +10,7 @@ import React from "react";
 
 const Signin = () => {
     const route = useRouter()
+    let {username,number} = useDetails()
   const form = useForm({
     defaultValues: {
       number: "",
@@ -25,6 +27,10 @@ const Signin = () => {
             },{
                 withCredentials:true
             })
+            username= response.data.data.name
+            number=response.data.data.number
+            console.log(username)
+            console.log(number)
             alert("Signin succesfully")
             route.push("/dashboard")
         } catch (error) {

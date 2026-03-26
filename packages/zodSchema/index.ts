@@ -12,6 +12,7 @@ export const LoginSchema = z.object({
 })
 
 export const PaymentSchema = z.object({
-    amountSend:z.number(),
+    note:z.string().max(30,"Maximum 30 characters required"),
+    amountSend:z.string(),
     receiverNumber:z.string().min(10,"Invalid Number").max(10, "Invalid Number").nonempty("Required")
 })

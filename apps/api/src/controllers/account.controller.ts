@@ -1,4 +1,4 @@
-import { accountTable, usersTable } from "@repo/db";
+import { accountTable, transactionTable, usersTable } from "@repo/db";
 import { PaymentSchema } from "@repo/zodschema";
 import type { Request, Response } from "express";
 import mongoose from "mongoose";
@@ -33,16 +33,17 @@ export const transfer = async (req: Request, res: Response) => {
   session.startTransaction();
 
   const safeParsed = PaymentSchema.safeParse(req.body);
-
+  console.log(req.body)
   if (!safeParsed.success) {
     return res.status(404).json({
       error: "Invalid Inputs",
     });
   }
 
-  const { amountSend, receiverNumber } = safeParsed.data;
+  const { amountSend, receiverNumber, note } = safeParsed.data;
 
-  if (!amountSend || amountSend <= 0 || !receiverNumber) {
+  const amountSend2 = Number(amountSend)
+  if (!amountSend || amountSend2 <= 0 || !receiverNumber) {
     return res.status(400).json({ error: "Invalid input" });
   }
   const userId = req.user?._id;
@@ -53,7 +54,7 @@ export const transfer = async (req: Request, res: Response) => {
     })
     .session(session);
 
-  if (!senderAccount || senderAccount.balance < amountSend) {
+  if (!senderAccount || senderAccount.balance < amountSend2) {
     await session.abortTransaction();
     return res.status(400).json({
       message: "insufficient balance",
@@ -91,8 +92,36 @@ export const transfer = async (req: Request, res: Response) => {
     .updateOne({ userId: recieverUserId }, { $inc: { balance: amountSend } })
     .session(session);
 
+  const sender = await usersTable.findById(userId)
+  const senderNumber = sender?.number
+
+  await transactionTable.create({
+    recieverNumber:receiverNumber,
+    senderNumber:senderNumber,
+    amountSend:amountSend2,
+    note:note
+  })
+
   await session.commitTransaction();
   res.json({
     message: "Transfer successful",
   });
 };
+
+export const getTransactions = async (req:Request, res:Response) => {
+  try {
+    const transactions = await transactionTable.find({}).sort({createdAt:-1}).limit(20)
+
+    if (!transactions) {
+      return res.status(404).json({
+        error:"No transactions found"
+      })
+    }
+
+    res.status(201).json({
+      transactions:transactions
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
