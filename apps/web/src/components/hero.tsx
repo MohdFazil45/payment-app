@@ -2,9 +2,11 @@
 import { useRouter } from "next/navigation";
 import { Button } from "./button";
 import Link from "next/link";
+import { useAuthorize } from "@/hooks/useAuthorize";
 
 export const Hero = () => {
   const route = useRouter();
+  const isAuthorise = useAuthorize();
 
   return (
     <div className="flex flex-col items-center justify-center mx-auto">
@@ -18,10 +20,17 @@ export const Hero = () => {
         </h5>
       </div>
       <div>
-        <Link
-          href={"/signup"}
-          children={<Button children="Get Started" size="lg" />}
-        />
+        {isAuthorise ? (
+          <Link
+            href={"/dashboard"}
+            children={<Button children="DashBoard" size="lg" />}
+          />
+        ) : (
+          <Link
+            href={"/signup"}
+            children={<Button children="Get Started" size="lg" />}
+          />
+        )}
       </div>
     </div>
   );

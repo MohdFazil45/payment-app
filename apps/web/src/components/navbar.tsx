@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { Button } from "./button";
 import { ThemeToggle } from "./themetoggle";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAuthorize } from "@/hooks/useAuthorize";
+import { User } from "lucide-react";
 
 export const Navbar = () => {
+  const isAuthorise = useAuthorize();
   const route = useRouter();
   const login = async () => {
     try {
@@ -22,10 +24,14 @@ export const Navbar = () => {
             <ThemeToggle />
           </div>
           <div>
-            <Link
-              href={"/signin"}
-              children={<Button children="Signin" size="sm" />}
-            />
+            {isAuthorise ? (
+              <User />
+            ) : (
+              <Link
+                href={"/signin"}
+                children={<Button children="Signin" size="sm" />}
+              />
+            )}
           </div>
         </div>
       </div>

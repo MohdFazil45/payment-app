@@ -2,13 +2,14 @@
 import { Card } from "@/components/card";
 import { Hero } from "@/components/hero";
 import { Navbar } from "@/components/navbar";
-
+import { useAuthorize } from "@/hooks/useAuthorize";
 export default function Home() {
   const cardDetails = [
     { title: "Instant Transfers", desc: "Send money instantly anywhere." },
     { title: "Secure Payments", desc: "Top-level encryption security." },
     { title: "Easy Tracking", desc: "Track all your transactions easily." },
   ];
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-linear-to-br from-slate-400 via-white/50 to-slate-500 dark:from-slate-800/90 dark:via-black dark:to-slate-900 transition-colors duration-500">
       <main className="flex w-full  flex-col items-center justify-between">

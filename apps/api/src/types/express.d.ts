@@ -5,6 +5,7 @@ declare global {
       user?: {
         _id: string;
         name: string;
+        number:string;
       };
     }
   }

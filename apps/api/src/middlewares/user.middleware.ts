@@ -29,6 +29,7 @@ export const authMiddleware = async (
     req.user = {
       _id: decoded._id,
       name: decoded.name,
+      number: decoded.number,
     };
 
     next();

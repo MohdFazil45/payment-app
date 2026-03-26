@@ -33,7 +33,7 @@ export const transfer = async (req: Request, res: Response) => {
   session.startTransaction();
 
   const safeParsed = PaymentSchema.safeParse(req.body);
-  console.log(req.body)
+  console.log(req.body);
   if (!safeParsed.success) {
     return res.status(404).json({
       error: "Invalid Inputs",
@@ -42,7 +42,7 @@ export const transfer = async (req: Request, res: Response) => {
 
   const { amountSend, receiverNumber, note } = safeParsed.data;
 
-  const amountSend2 = Number(amountSend)
+  const amountSend2 = Number(amountSend);
   if (!amountSend || amountSend2 <= 0 || !receiverNumber) {
     return res.status(400).json({ error: "Invalid input" });
   }
@@ -92,15 +92,15 @@ export const transfer = async (req: Request, res: Response) => {
     .updateOne({ userId: recieverUserId }, { $inc: { balance: amountSend } })
     .session(session);
 
-  const sender = await usersTable.findById(userId)
-  const senderNumber = sender?.number
+  const sender = await usersTable.findById(userId);
+  const senderNumber = sender?.number;
 
   await transactionTable.create({
-    recieverNumber:receiverNumber,
-    senderNumber:senderNumber,
-    amountSend:amountSend2,
-    note:note
-  })
+    recieverNumber: receiverNumber,
+    senderNumber: senderNumber,
+    amountSend: amountSend2,
+    note: note,
+  });
 
   await session.commitTransaction();
   res.json({
@@ -108,20 +108,49 @@ export const transfer = async (req: Request, res: Response) => {
   });
 };
 
-export const getTransactions = async (req:Request, res:Response) => {
+export const getTransactions = async (req: Request, res: Response) => {
   try {
-    const transactions = await transactionTable.find({}).sort({createdAt:-1}).limit(20)
+    const userNumber = req.user?.number;
+    console.log("here");
+    const transactions = await transactionTable
+      .find({
+        $or: [{ senderNumber: userNumber }, { recieverNumber: userNumber }],
+      } as any)
+      .sort({ addedAt: -1 })
+      .limit(20);
 
-    if (!transactions) {
-      return res.status(404).json({
-        error:"No transactions found"
-      })
+    if (transactions.length === 0) {
+      return res.status(404).json({ error: "No transactions found" });
     }
 
-    res.status(201).json({
-      transactions:transactions
-    })
+    console.log(transactions);
+
+    const formattedTransactions = transactions.map((tx: any) => {
+      const isSender = tx.senderNumber === userNumber;
+      return {
+        _id: tx._id,
+        amount: tx.amountSend,
+        addedAt: tx.addedAt,
+        type: isSender ? "sent" : "received",
+        message: isSender ? "Money sent" : "Money received",
+        senderNumber: tx.senderNumber,
+        recieverNumber: tx.recieverNumber,
+        note: tx.note,
+      };
+    });
+
+    console.log("transactions found:", transactions.length);
+    console.log("sample transaction:", transactions[0]);
+
+    const allTransactions = await transactionTable.find({} as any);
+    console.log(
+      "ALL transactions:",
+      JSON.stringify(allTransactions[0], null, 2),
+    );
+
+    res.status(200).json({ transactions: formattedTransactions });
   } catch (error) {
-    console.log(error)
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-}
+};

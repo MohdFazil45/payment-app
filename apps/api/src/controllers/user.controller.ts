@@ -95,6 +95,7 @@ export const signin = async (req: Request, res: Response) => {
       {
         _id: user._id.toString(),
         name: user.name,
+        number:user.number
       },
       process.env.JWT_SECRET!,
       { expiresIn: "7d" },
@@ -107,7 +108,6 @@ export const signin = async (req: Request, res: Response) => {
       _id: user._id,
       data:{
         name:user.name,
-        number:user.number
       }
     });
   } catch (error) {
