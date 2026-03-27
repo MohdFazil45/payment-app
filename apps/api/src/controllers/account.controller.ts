@@ -43,9 +43,21 @@ export const transfer = async (req: Request, res: Response) => {
   const { amountSend, receiverNumber, note } = safeParsed.data;
 
   const amountSend2 = Number(amountSend);
+
   if (!amountSend || amountSend2 <= 0 || !receiverNumber) {
     return res.status(400).json({ error: "Invalid input" });
   }
+
+  const receiver = await usersTable.findOne({
+    number:receiverNumber
+  })
+
+  const receiverName = receiver?.name
+
+  if (!receiverName) {
+    return res.status(400).json({ error: "Invalid input" });
+  }
+
   const userId = req.user?._id;
 
   const senderAccount = await accountTable
@@ -93,11 +105,12 @@ export const transfer = async (req: Request, res: Response) => {
     .session(session);
 
   const sender = await usersTable.findById(userId);
-  const senderNumber = sender?.number;
 
   await transactionTable.create({
-    recieverNumber: receiverNumber,
-    senderNumber: senderNumber,
+    receiverName:receiverName,
+    receiverNumber: receiverNumber,
+    senderNumber: sender?.number,
+    senderName:sender?.name,
     amountSend: amountSend2,
     note: note,
   });
@@ -111,38 +124,50 @@ export const transfer = async (req: Request, res: Response) => {
 export const getTransactions = async (req: Request, res: Response) => {
   try {
     const userNumber = req.user?.number;
-    console.log("here");
+
     const transactions = await transactionTable
       .find({
-        $or: [{ senderNumber: userNumber }, { recieverNumber: userNumber }],
+        $or: [{ senderNumber: userNumber }, { receiverNumber: userNumber }],
       } as any)
       .sort({ addedAt: -1 })
       .limit(20);
 
     if (transactions.length === 0) {
-      return res.status(404).json({ error: "No transactions found" });
+      return res.status(200).json({ transactions: [] });
     }
 
     const formattedTransactions = transactions.map((tx: any) => {
       const isSender = tx.senderNumber === userNumber;
+
       return {
         _id: tx._id,
         amount: tx.amountSend,
         addedAt: tx.addedAt,
         type: isSender ? "sent" : "received",
         message: isSender ? "Money sent" : "Money received",
-        senderNumber: tx.senderNumber,
-        recieverNumber: tx.recieverNumber,
-        receiverName: req.user?.name,
-        note: tx.note,
+
+        // full raw data if you still want it
+        senderName: tx.senderName || "",
+        senderNumber: tx.senderNumber || "",
+        receiverName: tx.receiverName || "",
+        receiverNumber: tx.receiverNumber || "",
+        note: tx.note || "",
+
+        displayName: isSender
+          ? tx.receiverName || "Unknown User"
+          : tx.senderName || "Unknown User",
+
+        displayNumber: isSender
+          ? tx.receiverNumber || "No Number"
+          : tx.senderNumber || "No Number",
       };
     });
 
-    console.log(formattedTransactions)
+    console.log("FORMATTED:", formattedTransactions);
 
-    res.status(200).json({ transactions: formattedTransactions });
+    return res.status(200).json({ transactions: formattedTransactions });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
