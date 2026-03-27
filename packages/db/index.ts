@@ -21,8 +21,18 @@ const accountSchema = new Schema({
 
 const transactionSchema = new Schema(
   {
-    recieverNumber: {
-      type:String,
+    receiverName: {
+      type: String,
+      ref: "User",
+      required: true,
+    },
+    receiverNumber: {
+      type: String,
+      ref: "User",
+      required: true,
+    },
+    senderName: {
+      type: String,
       ref: "User",
       required: true,
     },

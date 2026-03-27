@@ -82,8 +82,8 @@ function ActionCard({
     setIsHide((prev) => !prev);
   };
   return (
-    <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-md p-6 shadow-xl">
-      <h2 className="text-2xl font-bold text-white border-b border-white/20 pb-3 mb-5">
+    <div className="rounded-3xl border dark:border-white/20 border-neutral-600 bg-white/10 backdrop-blur-md p-6 shadow-xl">
+      <h2 className="text-2xl font-bold dark:text-white text-neutral-700 border-b border-neutral-600 dark:border-white/20 pb-3 mb-5">
         Quick Actions
       </h2>
 
@@ -95,13 +95,13 @@ function ActionCard({
         <div className="flex flex-col gap-3">
           <Button children="Check Balance" size="sm" onClick={checkBalance} />
 
-          <div className="rounded-2xl bg-white/10 border border-white/10 p-4">
-            <p className="text-sm text-white/70">Available Balance</p>
+          <div className="rounded-2xl dark:bg-white/10 bg-neutral-300 border dark:border-white/10 text-neutral-500 p-4">
+            <p className="text-sm dark:text-white/70 text-neutral-600">Available Balance</p>
             <div className="flex items-center justify-between">
               {isHide ? (
-                <p className="text-2xl font-bold text-white">{"₹--:--"}</p>
+                <p className="text-2xl font-bold dark:text-white text-neutral-600">{"₹--:--"}</p>
               ) : (
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-bold dark:text-white text-neutral-600">
                   {balance ? `₹${balance}` : "₹ --"}
                 </p>
               )}
@@ -122,21 +122,21 @@ function AccountCard({
   number: string;
 }) {
   return (
-    <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-md p-6 shadow-xl">
-      <h2 className="text-2xl font-bold text-white border-b border-white/20 pb-3 mb-5">
+    <div className="rounded-3xl border dark:border-white/20 border-neutral-600 dark:bg-white/10 bg-neutral-200/60 backdrop-blur-md p-6 shadow-xl">
+      <h2 className="text-2xl font-bold dark:text-white text-black border-b dark:border-white/20 border-neutral-600 pb-3 mb-5">
         Account Details
       </h2>
 
       <div className="flex items-center gap-4">
-        <div className="h-16 w-16 rounded-full bg-white/20 text-white flex items-center justify-center text-2xl font-bold">
+        <div className="h-16 w-16 rounded-full dark:bg-white/20 bg-neutral-300 text-neutral-600 dark:text-white flex items-center justify-center text-2xl font-bold dark:border-white/20 border">
           {username?.charAt(0)?.toUpperCase() || "U"}
         </div>
 
         <div className="space-y-1">
-          <p className="text-white text-xl font-semibold">
+          <p className="dark:text-white text-neutral-600 text-xl font-semibold">
             {username || "No username found"}
           </p>
-          <p className="text-white/80 text-base">
+          <p className="dark:text-white/80 text-neutral-700 text-base">
             {number ? `+91 ${number}` : "No number found"}
           </p>
         </div>

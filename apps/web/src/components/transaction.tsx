@@ -7,10 +7,9 @@ type Transaction = {
   type: "sent" | "received";
   message: string;
   addedAt: string;
-  senderNumber:string
-  recieverNumber: string
-  receiverName:string
-  note: string
+  displayName: string;
+  displayNumber: string;
+  note: string;
 };
 
 const TransactionList = ({ transactions }: { transactions: Transaction[] }) => {

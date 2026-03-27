@@ -5,9 +5,8 @@ type Transaction = {
   type: "sent" | "received";
   message: string;
   addedAt: string;
-  senderNumber: string;
-  recieverNumber: string;
-  receiverName: string;
+  displayName: string;
+  displayNumber: string;
   note: string;
 };
 
@@ -22,27 +21,25 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
     minute: "2-digit",
   });
 
-  console.log(transaction.receiverName)
-
   return (
-    <div className="w-full rounded-2xl border border-gray-200 bg-neutral-700 p-4 shadow-sm hover:shadow-md transition">
+    <div className="w-full rounded-2xl border dark:border-gray-200 border-gray-500 dark:bg-neutral-700 bg-neutral-300 p-4 shadow-sm hover:shadow-md transition">
       <div className="flex items-center justify-between gap-4">
         {/* Left Side */}
         <div className="flex items-center gap-3">
           <div
-            className={`h-12 w-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${
+            className={`h-12 w-12 rounded-full flex items-center justify-center text-white  font-bold text-lg ${
               isSent ? "bg-orange-500" : "bg-green-500"
             }`}
           >
-            {transaction.receiverName?.charAt(0).toUpperCase()}
+            {transaction.displayName?.charAt(0).toUpperCase()}
           </div>
 
           <div>
-            <h3 className="text-sm sm:text-base font-semibold text-gray-200">
-              {transaction.receiverName}
+            <h3 className="text-sm sm:text-base font-semibold dark:text-gray-200 text-gray-700">
+              {transaction.displayName}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-300">
-              {transaction.senderNumber}
+            <p className="text-xs sm:text-sm dark:text-gray-300 text-gray-800">
+              {transaction.displayNumber}
             </p>
           </div>
         </div>
@@ -56,7 +53,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
                 : "bg-green-100 text-green-700"
             }`}
           >
-            {isSent ? "Sent" : "Received"}
+            {isSent ? "Sent" : "Received"}  
           </span>
 
           <p
@@ -67,7 +64,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
             {isSent ? "-" : "+"}₹{transaction.amount}
           </p>
 
-          <p className="text-xs text-gray-400 mt-1">{formattedDate}</p>
+          <p className="text-xs dark:text-gray-400 text-gray-800 mt-1">{formattedDate}</p>
         </div>
       </div>
     </div>

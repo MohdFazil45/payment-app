@@ -16,9 +16,11 @@ export const Navbar = () => {
   return (
     <>
       <div className="h-16 w-full flex items-center justify-between px-8 py-16 bg-transparent ">
-        <div className="dark:text-white text-black font-bold text-3xl">
-          PayFlow
-        </div>
+        <Link href={"/"}>
+          <div className="dark:text-white text-black font-bold text-3xl">
+            PayFlow
+          </div>
+        </Link>
         <div className="flex items-center justify-center gap-4">
           <div>
             <ThemeToggle />

@@ -4,6 +4,7 @@ import { Input } from "@/components/input";
 import { LoginSchema } from "@repo/zodschema";
 import { useForm } from "@tanstack/react-form";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -30,75 +31,93 @@ const Signin = () => {
           },
         );
         alert("Signin succesfully");
-        route.push("/dashboard");
+        route.push("/");
       } catch (error) {
-        console.log(error);
+        if (axios.isAxiosError(error)) {
+          alert(error.response?.data?.error || "Something went wrong");
+        } else {
+          alert("Something went wrong");
+        }
+        ``;
       }
     },
   });
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-linear-to-br from-slate-400 via-white/50 to-slate-500 dark:from-slate-800/90 dark:via-black dark:to-slate-900 transition-colors duration-500">
-      <div className="h-fit w-[30vw] bg-white rounded-xl border border-neutral-400 mx-auto flex items-center flex-col py-20 px-8">
-        <h1 className="text-4xl font-semibold text-black tracking-tighter mb-12">
-          Login your Account
-        </h1>
-        <div>
-          <form
-            className="flex flex-col gap-3 items-center justify-center"
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <div>
-              {
-                <form.Field
-                  name="number"
-                  children={(field) => {
-                    return (
-                      <Input
-                        id={field.name}
-                        label={"Number"}
-                        name={field.name}
-                        onBlur={field.handleBlur}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          field.handleChange(e.target?.value)
-                        }
-                        placeholder={"Number"}
-                        type="text"
-                        value={field.state.value}
-                      />
-                    );
-                  }}
-                />
-              }
-            </div>
-            <div>
-              <form.Field
-                name="password"
-                children={(field) => {
-                  return (
-                    <Input
-                      id={field.name}
-                      label={"Password"}
-                      name={field.name}
-                      onBlur={field.handleBlur}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        field.handleChange(e.target?.value)
-                      }
-                      placeholder={"Password"}
-                      type="text"
-                      value={field.state.value}
-                    />
-                  );
-                }}
-              />
-            </div>
-            <div>
-              <Button children="Signin" size="lg" type="submit" />
-            </div>
-          </form>
+      <div className="w-full max-w-md rounded-2xl border border-white/20 dark:border-white/10 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-2xl px-8 py-10 flex flex-col items-center">
+        <div className="text-center mb-8 w-full">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Sign in
+          </h1>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+            Welcome back! Please login to your account.
+          </p>
         </div>
+
+        <form
+          className="w-full flex flex-col  gap-5 items-center"
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <div className="w-full">
+            <form.Field
+              name="number"
+              children={(field) => {
+                return (
+                  <Input
+                    id={field.name}
+                    label="Phone Number"
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      field.handleChange(e.target.value)
+                    }
+                    placeholder="Enter your number"
+                    type="text"
+                    value={field.state.value}
+                  />
+                );
+              }}
+            />
+          </div>
+
+          <div className="w-full">
+            <form.Field
+              name="password"
+              children={(field) => {
+                return (
+                  <Input
+                    id={field.name}
+                    label="Password"
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      field.handleChange(e.target.value)
+                    }
+                    placeholder="Enter your password"
+                    type="password"
+                    value={field.state.value}
+                  />
+                );
+              }}
+            />
+          </div>
+
+          <div className=" pt-2">
+            <Button children="Sign In" size="lg" type="submit" />
+          </div>
+
+          <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-2 w-full">
+            Don&apos;t have an account?{" "}
+            <Link href={"/signup"}>
+              <span className="font-medium text-slate-900 dark:text-white cursor-pointer hover:underline">
+                Sign up
+              </span>
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
   );
