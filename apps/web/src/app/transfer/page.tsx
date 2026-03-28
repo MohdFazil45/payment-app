@@ -31,7 +31,7 @@ const Transfer = () => {
         return alert("Enter a valid amount");
       try {
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_HTTP_URL}/transfer`,
+          `${process.env.NEXT_PUBLIC_API_URL}/transfer`,
           {
             receiverNumber: selectedUserNumber,
             amountSend: value.amountSend,
@@ -76,7 +76,7 @@ const Transfer = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_HTTP_URL}/bulk?filter=${val}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/bulk?filter=${val}`,
         { withCredentials: true },
       );
       setFilteredUsers(response.data.data);

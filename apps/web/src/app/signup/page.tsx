@@ -34,7 +34,7 @@ const Signup = () => {
       }
 
       try {
-        await axios.post(`${process.env.NEXT_PUBLIC_HTTP_URL}/register`, {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
           name: value.name,
           number: value.number,
           password: value.password,

@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [balance, setBalance] = useState("");
   const [transaction, setTransactions] = useState([]);
   const checkBalance = async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_HTTP_URL}/balance`, {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/balance`, {
       withCredentials: true,
     });
 
@@ -23,7 +23,7 @@ const Dashboard = () => {
     const getTransactions = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_HTTP_URL}/transactions`,
+          `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
           {
             withCredentials: true,
           },

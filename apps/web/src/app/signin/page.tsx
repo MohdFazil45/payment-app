@@ -21,7 +21,7 @@ const Signin = () => {
     onSubmit: async ({ value }) => {
       try {
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_HTTP_URL}/signin`,
+          `${process.env.NEXT_PUBLIC_API_URL}/signin`,
           {
             number: value.number,
             password: value.password,
