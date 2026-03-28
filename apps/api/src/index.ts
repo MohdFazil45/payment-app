@@ -8,7 +8,7 @@ const app = express()
 const PORT = process.env.PORT!
 
 app.use(cors({
-    origin: ["https://fazil-payflow.netlify.app", "http://localhost:3000"],
+    origin: ["https://fazil-payflow.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

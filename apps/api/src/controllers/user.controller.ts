@@ -100,11 +100,14 @@ export const signin = async (req: Request, res: Response) => {
       { expiresIn: "7d" },
     );
 
+    
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
     });
+
+
     res.status(200).json({
       msg: "Logged In succesfully",
       _id: user._id,
